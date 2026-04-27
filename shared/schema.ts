@@ -24,6 +24,8 @@ export const cwProfiles = pgTable("cw_profiles", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   cwEmail: text("cw_email").notNull(),
   cwPassword: text("cw_password").notNull(),
+  accountId: text("account_id"),
+  accountLink: text("account_link"),
   profileDescription: text("profile_description"), // User's own profile description
   isPrimary: boolean("is_primary").default(true), // Always true since only one profile per user
   auth_token: text("auth_token"),

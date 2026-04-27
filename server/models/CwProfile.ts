@@ -6,6 +6,8 @@ export interface CwProfileDocument extends Document {
   telegramId: number;
   cwEmail: string;
   cwPassword: string;
+  accountId?: string;
+  accountLink?: string;
   profileDescription?: string; // User's own profile description
   isPrimary: boolean;
   auth_token?: string;
@@ -22,6 +24,8 @@ const CwProfileSchema = new mongoose.Schema<CwProfileDocument>(
     userId: { type: mongoose.Schema.Types.ObjectId, required: true, unique: true, ref: "users" },
     cwEmail: { type: String, required: true },
     cwPassword: { type: String, required: true },
+    accountId: { type: String },
+    accountLink: { type: String },
     profileDescription: { type: String }, // User's own profile description
     isPrimary: { type: Boolean, default: true }, // Always true since only one profile per user
     auth_token: { type: String },

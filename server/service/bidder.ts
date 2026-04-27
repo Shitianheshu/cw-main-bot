@@ -80,6 +80,37 @@ export interface AutoBidResult {
     bidData?: any;
 }
 
+const BID_REPORT_API_URL = process.env.BID_REPORT_API_URL || "";
+
+interface BidReportPayload {
+    platform: "crowdworks";
+    account_id: string;
+    account_url: string;
+    job_id: string;
+    job_url: string;
+    bid_content: string;
+    budget: string;
+    bid_time: string;
+}
+
+async function sendBidReport(payload: BidReportPayload): Promise<void> {
+    if (!BID_REPORT_API_URL) {
+        console.warn("BID_REPORT_API_URL is not set. Skipping bid report.");
+        return;
+    }
+
+    try {
+        await axios.post(BID_REPORT_API_URL, payload, {
+            timeout: 30000,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    } catch (error: any) {
+        console.error("Failed to send bid report:", error?.message || error);
+    }
+}
+
 export async function singleAutoBid(telegramId: number, jobId: number): Promise<AutoBidResult> {
 
     // return { success: true, message: "Bid submitted successfully." };
@@ -138,6 +169,18 @@ export async function singleAutoBid(telegramId: number, jobId: number): Promise<
     };
 
     const submit = await placeBid(bidData as PlaceBidParams);
+    const suggestedBudget = (budget) ? budget : (bidData?.defaultHourlyPrice ?? 0);
+
+    await sendBidReport({
+        platform: "crowdworks",
+        account_id: (profile.accountId || "").trim(),
+        account_url: (profile.accountLink || "").trim(),
+        job_id: String(job.id),
+        job_url: `https://crowdworks.jp/public/jobs/${job.id}`,
+        bid_content: bidText,
+        budget: String(suggestedBudget),
+        bid_time: new Date().toISOString(),
+    });
 
     if (submit.success) {
         // Only save bid history and bidders if bid was successfully submitted
@@ -146,7 +189,7 @@ export async function singleAutoBid(telegramId: number, jobId: number): Promise<
             jobId: job.id,
             bidText,
             jobType: job.jobType,
-            budget: (budget) ? budget : (bidData?.defaultHourlyPrice ?? 0),
+            budget: suggestedBudget,
         };
 
         bidHistoryController.addBidToDay(telegramId, new Date(), biddedData as SingleBid);

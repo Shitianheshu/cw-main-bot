@@ -1,8 +1,8 @@
 import axios from 'axios';
 // Create axios instance with default config
 const api = axios.create({
-    baseURL: 'https://kilt-scrubbed-sliced.ngrok-free.dev',
-    // baseURL: import.meta.env.VITE_API_URL || 'https://trina-eosinlike-unconsumptively.ngrok-free.dev/',
+    baseURL: 'https://trina-eosinlike-unconsumptively.ngrok-free.dev',
+    // baseURL: import.meta.env.VITE_API_URL || 'https://trina-eosinlike-unconsumptively.ngrok-free.dev',
     headers: {
         'Content-Type': 'application/json'
     }

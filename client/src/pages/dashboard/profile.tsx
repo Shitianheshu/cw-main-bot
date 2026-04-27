@@ -25,6 +25,8 @@ interface CwProfile {
   id: string;
   cwEmail: string;
   cwPassword: string;
+  accountId?: string;
+  accountLink?: string;
   profileDescription?: string;
   isPrimary: boolean;
   auth_token?: string;
@@ -49,6 +51,8 @@ export default function Profile() {
   const [newProfile, setNewProfile] = useState({
     cwEmail: "",
     cwPassword: "",
+    accountId: "",
+    accountLink: "",
     profileDescription: "",
   });
 
@@ -107,6 +111,8 @@ export default function Profile() {
           setNewProfile({
             cwEmail: profile.cwEmail,
             cwPassword: profile.cwPassword,
+            accountId: profile.accountId || "",
+            accountLink: profile.accountLink || "",
             profileDescription: profile.profileDescription || "",
           });
         }
@@ -209,7 +215,7 @@ export default function Profile() {
       await apiClient.delete(`/api/cw-profiles/${cwProfile.id}`, { telegramId: telegramUser.id });
       setCwProfile(null);
       // Clear the form after deletion
-      setNewProfile({ cwEmail: "", cwPassword: "", profileDescription: "" });
+      setNewProfile({ cwEmail: "", cwPassword: "", accountId: "", accountLink: "", profileDescription: "" });
       toast({
         title: "Success",
         description: "Profile deleted successfully.",
@@ -455,6 +461,30 @@ export default function Profile() {
                   {validationErrors.cwPassword && (
                     <p className="text-sm text-red-500">{validationErrors.cwPassword}</p>
                   )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="accountId">Account ID</Label>
+                  <Input
+                    id="accountId"
+                    type="text"
+                    placeholder="Enter account ID"
+                    value={newProfile.accountId}
+                    onChange={(e) => setNewProfile({ ...newProfile, accountId: e.target.value })}
+                    data-testid="input-account-id"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="accountLink">Account Link</Label>
+                  <Input
+                    id="accountLink"
+                    type="text"
+                    placeholder="https://..."
+                    value={newProfile.accountLink}
+                    onChange={(e) => setNewProfile({ ...newProfile, accountLink: e.target.value })}
+                    data-testid="input-account-link"
+                  />
                 </div>
 
               </div>

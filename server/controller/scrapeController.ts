@@ -127,7 +127,7 @@ function shouldPostJobToTelegram(job: ScrapedJobType): boolean {
   const noBudget = job.lowBudget === 0 && job.highBudget === 0;
   if (noBudget) return true;
   if (job.jobType === "hourly") return true;
-  if (job.jobType === "fixed") return (job.lowBudget ?? 0) >= 50000;
+  if (job.jobType === "fixed") return (job.lowBudget ?? 0) >= 200000;
   return false;
 }
 
