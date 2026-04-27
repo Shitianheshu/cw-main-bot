@@ -6,7 +6,6 @@ import { launchBot, sendMessage } from "@Server/telegram";
 import { connectDBWithRetry } from "@Server/db";
 
 const app = express();
-
 // CORS configuration
 app.use((req, res, next) => {
   const origin = req.headers.origin || '*';
