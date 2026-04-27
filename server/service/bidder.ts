@@ -100,14 +100,25 @@ async function sendBidReport(payload: BidReportPayload): Promise<void> {
     }
 
     try {
-        await axios.post(BID_REPORT_API_URL, payload, {
+        console.log("[BidReport] Sending report payload:", payload);
+        const response = await axios.post(BID_REPORT_API_URL, payload, {
             timeout: 30000,
             headers: {
                 "Content-Type": "application/json",
             },
         });
+        console.log("[BidReport] Report sent successfully:", {
+            status: response.status,
+            statusText: response.statusText,
+            data: response.data,
+        });
     } catch (error: any) {
-        console.error("Failed to send bid report:", error?.message || error);
+        console.error("[BidReport] Failed to send bid report:", {
+            message: error?.message || "Unknown error",
+            status: error?.response?.status,
+            statusText: error?.response?.statusText,
+            data: error?.response?.data,
+        });
     }
 }
 
